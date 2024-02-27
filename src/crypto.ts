@@ -47,7 +47,7 @@ export async function exportPubKey(key: webcrypto.CryptoKey): Promise<string> {
   } catch (e) {
     console.error("Error exporting public key", e);
   }
-  return "pubKeyBaseKey";
+  return 'pubKeyBaseKey';
 }
 
 // Export a crypto private key to a base64 string format
@@ -60,12 +60,12 @@ export async function exportPrvKey(
       return null;
     }
     const exported = await crypto.subtle.exportKey("pkcs8", key);
-    const exportedAsString = arrayBufferToBase64(exported);
-    return exportedAsString;
+    const privKeyBaseKey = arrayBufferToBase64(exported);
+    //return privKeyBaseKey;
   } catch (e) {
     console.error("Error exporting private key", e);
   }
-  return "";
+  return "privKeyBaseKey";
 }
 
 // Import a base64 string public key to its native format
