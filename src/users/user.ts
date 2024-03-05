@@ -7,6 +7,10 @@ export type SendMessageBody = {
   destinationUserId: number;
 };
 
+// Initialize variables to store last received message
+let lastReceivedMessage = null as string | null;
+let lastSentMessage = null as string | null;
+
 export async function user(userId: number) {
   const _user = express();
   _user.use(express.json());
@@ -21,6 +25,14 @@ export async function user(userId: number) {
     console.log(
       `User ${userId} is listening on port ${BASE_USER_PORT + userId}`
     );
+  });
+
+  _user.get("/getLastReceivedMessage", (req, res) => {
+    res.json({ result: lastReceivedMessage });
+  });
+
+  _user.get("/getLastSentMessage", (req, res) => {
+    res.json({ result: lastSentMessage });
   });
 
   return server;

@@ -27,15 +27,17 @@ type GenerateRsaKeyPair = {
 export async function generateRsaKeyPair(): Promise<GenerateRsaKeyPair> {
   // implement this function using the crypto package to generate a public and private RSA key pair.
   // the public key should be used for encryption and the private key for decryption. Make sure the keys are extractable.
-  const { publicKey, privateKey } = await crypto.subtle.generateKey({
+  let keyPair = await crypto.subtle.generateKey(
+    {
       name: "RSA-OAEP",
-      modulusLength: 2048,
+      modulusLength: 4096,
       publicExponent: new Uint8Array([1, 0, 1]),
-      hash: 'SHA-256'
-    }, true,
-    ['encrypt', 'decrypt']
+      hash: "SHA-256",
+    },
+    true,
+    ["encrypt", "decrypt"],
   );
-  return { publicKey: {publicKey} as any, privateKey: {privateKey} as any };
+  return { publicKey: keyPair.publicKey, privateKey: keyPair.privateKey };
 }
 
 // Export a crypto public key to a base64 string format
@@ -169,14 +171,14 @@ export async function createRandomSymmetricKey(): Promise<webcrypto.CryptoKey> {
   // the key should be used for both encryption and decryption. Make sure the
   // keys are extractable.
   try {
-    const algo = 
+    let key = await crypto.subtle.generateKey(
       {
         name: "AES-CBC",
         length: 2048,
-      };
-    const extractable = true;
-    const key = await crypto.subtle.generateKey(algo, extractable, 
-      ["encrypt","decrypt",]);
+      },
+      true,
+      ["encrypt", "decrypt"]
+    );
   } catch (e) {
     console.error("Error generating symmetric key", e);
   }
@@ -202,7 +204,7 @@ export async function importSymKey(
 ): Promise<webcrypto.CryptoKey> {
   // implement this function to go back from the result of the exportSymKey function to it's native crypto key object
   try {
-    const imported = await crypto.subtle.importKey(
+    let imported = await crypto.subtle.importKey(
       "raw",
       base64ToArrayBuffer(strKey),
       {
