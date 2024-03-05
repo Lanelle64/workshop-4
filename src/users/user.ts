@@ -21,12 +21,6 @@ export async function user(userId: number) {
     res.send("live");
   });
 
-  const server = _user.listen(BASE_USER_PORT + userId, () => {
-    console.log(
-      `User ${userId} is listening on port ${BASE_USER_PORT + userId}`
-    );
-  });
-
   _user.get("/getLastReceivedMessage", (req, res) => {
     res.json({ result: lastReceivedMessage });
   });
@@ -35,13 +29,16 @@ export async function user(userId: number) {
     res.json({ result: lastSentMessage });
   });
 
-  //Each user should be able to receive messages.
-  
-//This should be done through an HTTP POST route called /message.
-
   _user.post("/message", (req, res) => {
-    const { message } = req.body;
-    res.send(message);
+    const { message }: { message: string } = req.body;
+    lastReceivedMessage = message;
+    res.send("success");
+  });
+  
+  const server = _user.listen(BASE_USER_PORT + userId, () => {
+    console.log(
+      `User ${userId} is listening on port ${BASE_USER_PORT + userId}`
+    );
   });
 
   return server;

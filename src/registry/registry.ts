@@ -27,27 +27,34 @@ export async function launchRegistry() {
     res.send("live");
   });
 
-  const server = _registry.listen(REGISTRY_PORT, () => {
-    console.log(`registry is listening on port ${REGISTRY_PORT}`);
-  });
   //You should create an HTTP POST route called /registerNode which allows for nodes to register themselves on the registry.
-
   _registry.post("/registerNode", (req: Request<{}, {}, RegisterNodeBody>, res: Response<GetNodeRegistryBody>) => {
     const { nodeId, pubKey, privKey } = req.body;
     nodes.push({ nodeId, pubKey, privKey });
     res.json({ nodes });
-  }
-  );
+  });
 
   //Create an HTTP GET route called /getPrivateKey that allows the unit tests to retrieve the private key of a node.
+  //requests are of the type getPrivateKey(BASE_ONION_ROUTER_PORT + node.nodeId);
   _registry.get("/getPrivateKey", (req, res) => {
-    res.json({ result: nodes[0].privKey });
+    const nodeId = parseInt(req.query.nodeId as string);
+    const node = nodes.find((node) => node.nodeId === nodeId);
+    if (node) {
+      res.json({ privKey: node.privKey });
+    } else {
+      res.status(404).json({ error: "Node not found" });
+    }
   });
 
   //Create an HTTP GET route called /getNodeRegistry that allows the unit tests to retrieve the list of registered nodes.
   _registry.get("/getNodeRegistry", (req, res) => {
     res.json({ nodes });
   });
+
   
+  const server = _registry.listen(REGISTRY_PORT, () => {
+    console.log(`registry is listening on port ${REGISTRY_PORT}`);
+  });
+
   return server;
 }
