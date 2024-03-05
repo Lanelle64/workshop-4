@@ -35,5 +35,14 @@ export async function user(userId: number) {
     res.json({ result: lastSentMessage });
   });
 
+  //Each user should be able to receive messages.
+  
+//This should be done through an HTTP POST route called /message.
+
+  _user.post("/message", (req, res) => {
+    const { message } = req.body;
+    res.send(message);
+  });
+
   return server;
 }
