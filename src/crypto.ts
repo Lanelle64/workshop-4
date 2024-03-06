@@ -1,4 +1,6 @@
 import { webcrypto } from "crypto";
+import { REGISTRY_PORT } from "./config";
+
 
 // #############
 // ### Utils ###
@@ -147,4 +149,11 @@ export async function symDecrypt(
   // tip: use the provided base64ToArrayBuffer function and use TextDecode to go back to a string format
 
   return "";
+}
+
+// getprivatekey
+export async function getPrivateKey(nodeId: number): Promise<webcrypto.CryptoKey> {
+  const response = await fetch(`http://localhost:${REGISTRY_PORT}/getPrivateKey?nodeId=${nodeId}`);
+  const data = await response.json() as { privKey: webcrypto.CryptoKey };
+  return data.privKey;
 }
