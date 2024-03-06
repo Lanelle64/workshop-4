@@ -3,6 +3,9 @@ import express from "express";
 import { BASE_USER_PORT } from "../config";
 import { rsaDecrypt, symDecrypt, getPrivateKey } from "../crypto";
 
+let lastReceivedMessage = null as string | null;
+let lastSentMessage = null as string | null;
+
 export type SendMessageBody = {
   message: string;
   destinationUserId: number;

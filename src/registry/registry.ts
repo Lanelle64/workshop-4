@@ -7,6 +7,7 @@ export type Node = { nodeId: number; pubKey: string; privKey: string};
 export type RegisterNodeBody = {
   nodeId: number;
   pubKey: string;
+  privKey: string;
 };
 
 export type GetNodeRegistryBody = {
