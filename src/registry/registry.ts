@@ -3,7 +3,7 @@ import express, { Request, Response } from "express";
 import { REGISTRY_PORT } from "../config";
 
 // Initialize variables to store registered nodes
-const nodes = [] as Node[];
+let nodes = [] as Node[];
 
 export type Node = { nodeId: number; pubKey: string; privKey: string};
 
@@ -30,7 +30,11 @@ export async function launchRegistry() {
   //You should create an HTTP POST route called /registerNode which allows for nodes to register themselves on the registry.
   _registry.post("/registerNode", (req: Request<{}, {}, RegisterNodeBody>, res: Response<GetNodeRegistryBody>) => {
     const { nodeId, pubKey, privKey } = req.body;
-    nodes.push({ nodeId, pubKey, privKey });
+    //Checks if the node is already registered
+    const node = nodes.find((node) => node.nodeId === nodeId);
+    if (!node) {
+      nodes.push({ nodeId, pubKey, privKey });
+    }
     res.json({ nodes });
   });
 
