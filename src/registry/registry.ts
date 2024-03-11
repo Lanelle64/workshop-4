@@ -36,7 +36,7 @@ export async function launchRegistry() {
 
   //Create an HTTP GET route called /getPrivateKey that allows the unit tests to retrieve the private key of a node.
   //requests are of the type getPrivateKey(BASE_ONION_ROUTER_PORT + node.nodeId);
-  _registry.get("/getPrivateKey", (req, res) => {
+  /*_registry.get("/getPrivateKey", (req, res) => {
     const nodeId = parseInt(req.query.nodeId as string);
     const node = nodes.find((node) => node.nodeId === nodeId);
     if (node) {
@@ -44,7 +44,7 @@ export async function launchRegistry() {
     } else {
       res.status(404).json({ error: "Node not found" });
     }
-  });
+  });*/
 
   //Create an HTTP GET route called /getNodeRegistry that allows the unit tests to retrieve the list of registered nodes.
   _registry.get("/getNodeRegistry", (req, res) => {
